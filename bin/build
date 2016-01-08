@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+tsc -d --target ES5 --out dist/polycod.js src/polycod.ts

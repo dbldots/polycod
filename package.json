@@ -1,0 +1,28 @@
+{
+  "name": "polycod",
+  "version": "0.0.1",
+  "description": "polyfill library to write angular2 looking angular1 compontents",
+  "main": "polycod.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "testem"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dbldots/polycod.git"
+  },
+  "keywords": [
+    "angularjs",
+    "angular1",
+    "angular2",
+    "components"
+  ],
+  "author": "johannes-kostas goetzinger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dbldots/polycod/issues"
+  },
+  "homepage": "https://github.com/dbldots/polycod#readme",
+}

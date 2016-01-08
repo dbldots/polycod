@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+cd ..
+./bin/build
+cd demo
+cp ../dist/polycod.js app/
+python -m SimpleHTTPServer 8000

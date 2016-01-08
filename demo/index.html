@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang=en ng-app="demo">
+<head>
+  <meta charset=utf-8>
+  <title>blah</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    .component {
+      display: block;
+      border: 5px dashed blue;
+      padding: 20px;
+    }
+  </style>
+</head>
+  <body>
+    <section class="component">
+      <foo [testvar]="hello" (activated)="onActivated($event)"></foo>
+      <h1>Piyo, a component written in Typescript.</h1>
+      <hoge-fuga [title]="fuga" class="component">This content should be replaced.</hoge-fuga>
+    </section>
+    <small><br>Made possible by ngsham.</small>
+
+    <script type="text/javascript" src="https://code.angularjs.org/1.4.8/angular.min.js"></script>
+    <script type="text/javascript" src="app/polycod.js"></script>
+    <script type="text/javascript" src="app/app.js"></script>
+  </body>
+</html>

@@ -51,6 +51,8 @@ var Polycod;
         var Component = (function () {
             function Component(klass) {
                 this.klass = klass;
+                if (klass.annotations.inject)
+                    this.klass['$inject'] = klass.annotations.inject;
                 this.name = Polycod.util.dash2Camel(Polycod.util.deBracket(klass.annotations.selector));
                 this.build();
             }
@@ -60,7 +62,9 @@ var Polycod;
                     return {
                         controller: _this.klass,
                         controllerAs: _this.name,
-                        bindToController: true,
+                        // bindToController does not work with attributes in parenthesis or brackets
+                        // instead we use our own proxying (see below)
+                        bindToController: false,
                         scope: true,
                         compile: _this.compile.bind(_this),
                         templateUrl: _this.klass.annotations.templateUrl,
@@ -69,7 +73,6 @@ var Polycod;
                 });
             };
             Component.prototype.compile = function (element, attrs) {
-                console.log(element[0].attributes);
                 return {
                     pre: this.prelink.bind(this),
                     post: this.postlink.bind(this)
@@ -87,8 +90,7 @@ var Polycod;
                         name = Polycod.util.deAll(name);
                         events[name] = value;
                     }
-                    // setup watchers for properties
-                    if (Polycod.util.isNgProperty(key)) {
+                    else if (Polycod.util.isNgProperty(key)) {
                         var name = key.replace(/^bind-/, '');
                         name = Polycod.util.deAll(name);
                         ctrl[name] = undefined;

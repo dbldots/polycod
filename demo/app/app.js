@@ -10,13 +10,13 @@ angular.module('demo').run(function($rootScope) {
 Polycod.component({
   selector: 'foo',
   module: 'demo',
+  inject: ['$element'],
   template: '<h1>{{ testvar }}</h1>',
   events: ['activated'],
-  class: function() {
-    this.fun = function() {};
+  class: function($element) {
+    console.log('injected $element', $element);
 
     this.activate = function() {
-      console.log('activate');
       this.activated('hey joe')
     }.bind(this);
   }

@@ -26,6 +26,13 @@ declare module Polycod {
     }
 }
 declare module Polycod {
-    function Component(klass: any): Ng1.Component;
+    namespace Decorators {
+        function Component(annotations: any): (target: any) => any;
+        function View(annotations: any): (target: any) => any;
+        function Ng1(annotations: any): (target: any) => any;
+    }
+}
+declare module Polycod {
+    function bootstrap(klass: any): Ng1.Component;
     function component(annotations: any): Ng1.Component;
 }

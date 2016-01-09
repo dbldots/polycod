@@ -3,4 +3,5 @@
 ./bin/build
 cd demo
 ln -sF ../dist/polycod.js polycod.js
+tsc --target ES5 --experimentalDecorators typescript.ts
 python -m SimpleHTTPServer 8000

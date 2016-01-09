@@ -1,3 +1,4 @@
 test/tmp/*
 node_modules/*
 demo/polycod.js
+demo/typescript.js

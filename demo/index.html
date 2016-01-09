@@ -7,27 +7,32 @@
     body {
       font-family: sans-serif;
     }
+    h3 {
+      margin-left: 20px;
+    }
     .component {
       display: block;
       border: 5px dashed blue;
       padding: 20px;
+      margin: 20px;
     }
   </style>
 </head>
   <body>
-    <section class="component">
-      <cmp1 [name]="userName" (activated)="onActivated($event)">
-        <span transclude-to="info">-this is transcluded-</span>
-      </cmp1>
-      <h3 ng-if="gotActivated">roundtrip done.</h3>
+    <cmp1 [name]="userName" (activated)="onActivated($event)">
+      <span transclude-to="info">-this is transcluded-</span>
+    </cmp1>
+    <cmp2 [days]="weekDays"></cmp2>
+    <cmp3></cmp3>
 
-      <cmp2 [days]="weekDays"></cmp2>
-    </section>
+    <h3 ng-if="gotActivated">roundtrip done.</h3>
+
     <small><br>Made possible by polycod.</small>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="https://code.angularjs.org/1.4.8/angular.min.js"></script>
     <script type="text/javascript" src="polycod.js"></script>
     <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="typescript.js"></script>
   </body>
 </html>

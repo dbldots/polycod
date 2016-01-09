@@ -172,14 +172,63 @@ var Polycod;
         Ng1.Component = Component;
     })(Ng1 = Polycod.Ng1 || (Polycod.Ng1 = {}));
 })(Polycod || (Polycod = {}));
+var Polycod;
+(function (Polycod) {
+    var Decorators;
+    (function (Decorators) {
+        var addAnnotations = function (target, annotations) {
+            if (!target.annotations)
+                target.annotations = {};
+            for (var key in annotations) {
+                target.annotations[key] = annotations[key];
+            }
+            return target;
+        };
+        var validateAnnotations = function (annotations, annotationName, allowed) {
+            for (var key in annotations) {
+                if (allowed.indexOf(key) === -1) {
+                    throw new Error("'" + key + "' option is not allowed for " + annotationName);
+                }
+            }
+        };
+        function Component(annotations) {
+            return function (target) {
+                validateAnnotations(annotations, 'Component', [
+                    'selector', 'events'
+                ]);
+                return addAnnotations(target, annotations);
+            };
+        }
+        Decorators.Component = Component;
+        function View(annotations) {
+            return function (target) {
+                validateAnnotations(annotations, 'Component', [
+                    'template', 'templateUrl'
+                ]);
+                return addAnnotations(target, annotations);
+            };
+        }
+        Decorators.View = View;
+        function Ng1(annotations) {
+            return function (target) {
+                validateAnnotations(annotations, 'Component', [
+                    'inject', 'transclude', 'module'
+                ]);
+                return addAnnotations(target, annotations);
+            };
+        }
+        Decorators.Ng1 = Ng1;
+    })(Decorators = Polycod.Decorators || (Polycod.Decorators = {}));
+})(Polycod || (Polycod = {}));
 /// <reference path = "polycod/ng1/component.ts" />
+/// <reference path = "polycod/decorators.ts" />
 var Polycod;
 (function (Polycod) {
     var strategy = Polycod.Ng1.Component;
-    function Component(klass) {
+    function bootstrap(klass) {
         return new strategy(klass);
     }
-    Polycod.Component = Component;
+    Polycod.bootstrap = bootstrap;
     function component(annotations) {
         var klass = annotations['class'];
         delete annotations['class'];

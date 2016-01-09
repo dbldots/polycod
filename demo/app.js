@@ -17,7 +17,7 @@ Polycod.component({
   selector: 'cmp1',
   module: 'demo',
   inject: ['$element'],
-  template: '<h1>hello {{ name }}&nbsp;<small>(using name from binding)</small></h1><div transclude-id="info"></div>',
+  template: '<div class="component"><h1>hello {{ name }}&nbsp;<small>(using name from binding)</small></h1><div transclude-id="info"></div></div>',
   events: ['activated', 'deactivated'],
   transclude: true,
   class: function($element) {
@@ -32,6 +32,6 @@ Polycod.component({
 Polycod.component({
   selector: 'cmp2',
   module: 'demo',
-  template: '<div><span *ng-for="#day of days" (click)="onClick()">{{ day }}&nbsp;</span></div>',
+  template: '<div class="component"><span *ng-for="#day of days" (click)="onClick()">{{ day }}&nbsp;</span></div>',
   class: function() {}
 });

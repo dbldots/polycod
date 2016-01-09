@@ -29,7 +29,7 @@ module Polycod {
             compile:      this.compile.bind(this),
             templateUrl:  this.klass.annotations.templateUrl,
             template:     this.klass.annotations.template
-          } 
+          }
         });
       }
 
@@ -41,11 +41,10 @@ module Polycod {
       }
 
       private prelink(scope, element, attrs, ctrl) {
-        var injector = element.injector();
-        var events = {};
-        var key;
+        var events    = {};
+        var injector  = element.injector();
 
-        for (key in attrs) {
+        for (var key in attrs) {
           var value = attrs[key];
 
           if (util.isNgEvent(key)) {
@@ -59,40 +58,42 @@ module Polycod {
             name = util.deAll(name);
             ctrl[name] = undefined;
 
-            scope.$watch(value, (v) => {
-              ctrl[key] = v;
-            });
+            (function (_name) {
+              scope.$watch(value, (v) => {
+                ctrl[_name] = v;
+              });
+            })(name);
           }
 
           // copy static attributes on to controller
           else {
-            ctrl[key] = value; 
+            ctrl[key] = value;
           }
         }
 
         // implements functions to emit events
         if (this.klass.annotations.events) {
-          var ev, index;
-
-          for (index in this.klass.annotations.events) {
-            ev = this.klass.annotations.events[index];
-
+          for (var index in this.klass.annotations.events) {
+            var ev = this.klass.annotations.events[index];
             if (ctrl[ev]) continue;
 
-            ctrl[ev] = (...args) => {
-              var $parse = injector.get('$parse');
+            (function (_event) {
+              ctrl[_event] = function() {
+                var $parse = injector.get('$parse');
 
-              if (!events.hasOwnProperty(ev)) {
-                var $log = injector.get('$log');
-                $log.info(`${this.name}: no callback set for ${ev}`);
-                return
+                if (!events.hasOwnProperty(_event)) {
+                  var $log = injector.get('$log');
+                  $log.info(`${this.name}: no callback set for ${_event}`);
+                  return
+                }
+
+                var fn = $parse(events[_event]);
+                var args = [].slice.call(arguments);
+                var data = args.length <= 1 ? args[0] : args;
+                var event = { data: data };
+                fn(scope, { $event: event });
               }
-
-              var fn = $parse(events[ev]);
-              var data = args.length <= 1 ? args[0] : args;
-              var event = { data: data };
-              fn(scope, { $event: event });
-            }
+            })(ev);
           }
         }
 
@@ -100,11 +101,13 @@ module Polycod {
         for (key in ctrl) {
           if (key.indexOf('$') === 0) continue;
 
-          Object.defineProperty(scope, key, {
-            get: () => {
-              return ctrl[key];
-            }
-          });
+          (function (_key) {
+            Object.defineProperty(scope, _key, {
+              get: () => {
+                return ctrl[_key];
+              }
+            });
+          })(key);
         }
       }
 

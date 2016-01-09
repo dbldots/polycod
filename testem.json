@@ -1,0 +1,15 @@
+{
+  "framework": "jasmine2",
+
+  "src_files": [
+    "test/polycod/**/*.js"
+  ],
+
+  "before_tests": "browserify test/dependencies.js -o test/tmp/dependencies.js && tsc --target ES5 --out test/tmp/polycod.js src/polycod.ts",
+
+  "serve_files": [
+    "test/tmp/dependencies.js",
+    "test/tmp/polycod.js",
+    "test/polycod/**/*.js"
+  ]
+}

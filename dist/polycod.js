@@ -79,11 +79,9 @@ var Polycod;
                 };
             };
             Component.prototype.prelink = function (scope, element, attrs, ctrl) {
-                var _this = this;
-                var injector = element.injector();
                 var events = {};
-                var key;
-                for (key in attrs) {
+                var injector = element.injector();
+                for (var key in attrs) {
                     var value = attrs[key];
                     if (Polycod.util.isNgEvent(key)) {
                         var name = key.replace(/^bind-/, '');
@@ -94,9 +92,11 @@ var Polycod;
                         var name = key.replace(/^bind-/, '');
                         name = Polycod.util.deAll(name);
                         ctrl[name] = undefined;
-                        scope.$watch(value, function (v) {
-                            ctrl[key] = v;
-                        });
+                        (function (_name) {
+                            scope.$watch(value, function (v) {
+                                ctrl[_name] = v;
+                            });
+                        })(name);
                     }
                     else {
                         ctrl[key] = value;
@@ -104,38 +104,38 @@ var Polycod;
                 }
                 // implements functions to emit events
                 if (this.klass.annotations.events) {
-                    var ev, index;
-                    for (index in this.klass.annotations.events) {
-                        ev = this.klass.annotations.events[index];
+                    for (var index in this.klass.annotations.events) {
+                        var ev = this.klass.annotations.events[index];
                         if (ctrl[ev])
                             continue;
-                        ctrl[ev] = function () {
-                            var args = [];
-                            for (var _i = 0; _i < arguments.length; _i++) {
-                                args[_i - 0] = arguments[_i];
-                            }
-                            var $parse = injector.get('$parse');
-                            if (!events.hasOwnProperty(ev)) {
-                                var $log = injector.get('$log');
-                                $log.info(_this.name + ": no callback set for " + ev);
-                                return;
-                            }
-                            var fn = $parse(events[ev]);
-                            var data = args.length <= 1 ? args[0] : args;
-                            var event = { data: data };
-                            fn(scope, { $event: event });
-                        };
+                        (function (_event) {
+                            ctrl[_event] = function () {
+                                var $parse = injector.get('$parse');
+                                if (!events.hasOwnProperty(_event)) {
+                                    var $log = injector.get('$log');
+                                    $log.info(this.name + ": no callback set for " + _event);
+                                    return;
+                                }
+                                var fn = $parse(events[_event]);
+                                var args = [].slice.call(arguments);
+                                var data = args.length <= 1 ? args[0] : args;
+                                var event = { data: data };
+                                fn(scope, { $event: event });
+                            };
+                        })(ev);
                     }
                 }
                 // proxy from scope to controller
                 for (key in ctrl) {
                     if (key.indexOf('$') === 0)
                         continue;
-                    Object.defineProperty(scope, key, {
-                        get: function () {
-                            return ctrl[key];
-                        }
-                    });
+                    (function (_key) {
+                        Object.defineProperty(scope, _key, {
+                            get: function () {
+                                return ctrl[_key];
+                            }
+                        });
+                    })(key);
                 }
             };
             Component.prototype.postlink = function (scope, element, attrs, ctrl) {

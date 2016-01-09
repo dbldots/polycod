@@ -12,7 +12,7 @@ Polycod.component({
   module: 'demo',
   inject: ['$element'],
   template: '<h1>{{ testvar }}</h1>',
-  events: ['activated'],
+  events: ['activated', 'deactivated'],
   class: function($element) {
     console.log('injected $element', $element);
 

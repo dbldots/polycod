@@ -20,7 +20,8 @@ declare module Polycod {
             private build();
             private compile(element, attrs);
             private prelink(scope, element, attrs, ctrl);
-            private postlink(scope, element, attrs, ctrl);
+            private postlink(scope, element, attrs, ctrl, transclude);
+            private convertTemplate(html);
         }
     }
 }

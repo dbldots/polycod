@@ -4,7 +4,7 @@ Polycod.component({
   selector: 'test1',
   module: 'myApp',
   template: '<h1>HELLO {{ name }}</h1>',
-  class: function() { }
+  class: function() {}
 });
 
 Polycod.component({
@@ -17,6 +17,22 @@ Polycod.component({
       this.activated('yay');
     }.bind(this);
   }
+});
+
+Polycod.component({
+  selector: 'test3',
+  module: 'myApp',
+  transclude: true,
+  events: ['activated', 'deactivated'],
+  template: '<div transclude-id="info">',
+  class: function() {}
+});
+
+Polycod.component({
+  selector: 'test4',
+  module: 'myApp',
+  template: '<div *ng-for="#item of items"></div>',
+  class: function() {}
 });
 
 describe('Polycod.Ng1.Component', function(){
@@ -72,5 +88,21 @@ describe('Testing directives', function() {
     scope.onActivated = function() {};
     var element = $compile("<test2 (activated)=\"onActivated($event)\"></test2")(scope);
     $rootScope.$digest();
+  });
+
+  it('compiles with transclusion', function() {
+    scope = $rootScope.$new();
+    scope.userName = 'joe';
+    var element = $compile("<test3><div transclude-to='info'>INFO</div></test3")(scope);
+    $rootScope.$digest();
+    expect(element.html()).toContain('INFO')
+  });
+
+  it('reformats ng-for', function() {
+    scope = $rootScope.$new();
+    scope.userName = 'joe';
+    var element = $compile("<test4></test4")(scope);
+    $rootScope.$digest();
+    expect(element.html()).toContain('ng-repeat="item in items"')
   });
 });

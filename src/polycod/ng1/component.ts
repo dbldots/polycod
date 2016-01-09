@@ -28,12 +28,15 @@ module Polycod {
             scope:        true,
             compile:      this.compile.bind(this),
             templateUrl:  this.klass.annotations.templateUrl,
-            template:     this.klass.annotations.template
+            template:     this.klass.annotations.template,
+            transclude:   this.klass.annotations.transclude,
           }
         });
       }
 
       private compile(element, attrs) {
+        element[0].innerHTML = this.convertTemplate(element[0].innerHTML);
+
         return {
           pre: this.prelink.bind(this),
           post: this.postlink.bind(this)
@@ -111,8 +114,32 @@ module Polycod {
         }
       }
 
-      private postlink(scope, element, attrs, ctrl) {
+      private postlink(scope, element, attrs, ctrl, transclude) {
         (typeof ctrl.activate === 'function') && ctrl.activate();
+
+        if (!this.klass.annotations.transclude) return;
+
+        // custom transclusion. from here https://www.airpair.com/angularjs/posts/creating-container-components-part-2-angular-1-directives
+        transclude(function(clone) {
+          angular.forEach(clone, function(cloneEl) {
+            if (!cloneEl.attributes) return;
+            var destinationId = cloneEl.attributes["transclude-to"].value;
+            var destination = element.find('[transclude-id="'+ destinationId +'"]');
+            if (destination.length) {
+              destination.append(cloneEl);
+            } else { 
+              cloneEl.remove();
+            }
+          });
+        });
+      }
+
+      private convertTemplate(html) {
+        if (!html || !html.length) return;
+
+        html = html.replace(/((\*ng-for="#)([a-zA-Z0-9-_]+)( of )([a-zA-Z0-9-_]+))/g, 'ng-repeat="$3 in $5');
+        html = html.replace(/\(click\)/g, 'ng-click');
+        return html;
       }
     }
   }

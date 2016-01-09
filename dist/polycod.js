@@ -68,11 +68,13 @@ var Polycod;
                         scope: true,
                         compile: _this.compile.bind(_this),
                         templateUrl: _this.klass.annotations.templateUrl,
-                        template: _this.klass.annotations.template
+                        template: _this.klass.annotations.template,
+                        transclude: _this.klass.annotations.transclude,
                     };
                 });
             };
             Component.prototype.compile = function (element, attrs) {
+                element[0].innerHTML = this.convertTemplate(element[0].innerHTML);
                 return {
                     pre: this.prelink.bind(this),
                     post: this.postlink.bind(this)
@@ -138,8 +140,32 @@ var Polycod;
                     })(key);
                 }
             };
-            Component.prototype.postlink = function (scope, element, attrs, ctrl) {
+            Component.prototype.postlink = function (scope, element, attrs, ctrl, transclude) {
                 (typeof ctrl.activate === 'function') && ctrl.activate();
+                if (!this.klass.annotations.transclude)
+                    return;
+                // custom transclusion. from here https://www.airpair.com/angularjs/posts/creating-container-components-part-2-angular-1-directives
+                transclude(function (clone) {
+                    angular.forEach(clone, function (cloneEl) {
+                        if (!cloneEl.attributes)
+                            return;
+                        var destinationId = cloneEl.attributes["transclude-to"].value;
+                        var destination = element.find('[transclude-id="' + destinationId + '"]');
+                        if (destination.length) {
+                            destination.append(cloneEl);
+                        }
+                        else {
+                            cloneEl.remove();
+                        }
+                    });
+                });
+            };
+            Component.prototype.convertTemplate = function (html) {
+                if (!html || !html.length)
+                    return;
+                html = html.replace(/((\*ng-for="#)([a-zA-Z0-9-_]+)( of )([a-zA-Z0-9-_]+))/g, 'ng-repeat="$3 in $5');
+                html = html.replace(/\(click\)/g, 'ng-click');
+                return html;
             };
             return Component;
         })();

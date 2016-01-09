@@ -16,11 +16,16 @@
 </head>
   <body>
     <section class="component">
-      <foo [name]="userName" (activated)="onActivated($event)"></foo>
+      <cmp1 [name]="userName" (activated)="onActivated($event)">
+        <span transclude-to="info">-this is transcluded-</span>
+      </cmp1>
       <h3 ng-if="gotActivated">roundtrip done.</h3>
+
+      <cmp2 [days]="weekDays"></cmp2>
     </section>
     <small><br>Made possible by polycod.</small>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="https://code.angularjs.org/1.4.8/angular.min.js"></script>
     <script type="text/javascript" src="polycod.js"></script>
     <script type="text/javascript" src="app.js"></script>

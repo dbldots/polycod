@@ -101,6 +101,7 @@ describe('Testing directives', function() {
   it('reformats ng-for', function() {
     scope = $rootScope.$new();
     scope.userName = 'joe';
+    scope.items = ['one']
     var element = $compile("<test4></test4")(scope);
     $rootScope.$digest();
     expect(element.html()).toContain('ng-repeat="item in items"')

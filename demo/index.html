@@ -2,7 +2,7 @@
 <html lang=en ng-app="demo">
 <head>
   <meta charset=utf-8>
-  <title>blah</title>
+  <title>polycod</title>
   <style>
     body {
       font-family: sans-serif;
@@ -16,12 +16,13 @@
 </head>
   <body>
     <section class="component">
-      <foo [testvar]="hello" (activated)="onActivated($event)"></foo>
+      <foo [name]="userName" (activated)="onActivated($event)"></foo>
+      <h3 ng-if="gotActivated">roundtrip done.</h3>
     </section>
     <small><br>Made possible by polycod.</small>
 
     <script type="text/javascript" src="https://code.angularjs.org/1.4.8/angular.min.js"></script>
-    <script type="text/javascript" src="app/polycod.js"></script>
-    <script type="text/javascript" src="app/app.js"></script>
+    <script type="text/javascript" src="polycod.js"></script>
+    <script type="text/javascript" src="app.js"></script>
   </body>
 </html>

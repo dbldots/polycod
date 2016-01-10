@@ -37,11 +37,11 @@ Polycod.component({
 
 describe('Polycod.Ng1.Component', function(){
   describe('#constructor', function() {
-    it('moves injections to $inject', function(){
+    it('moves providers to $inject', function(){
       var cmp = Polycod.component({
         selector: 'foo',
         module: 'demo',
-        inject: ['$timeout'],
+        providers: ['$timeout'],
         class: function() {}
       });
       expect(cmp.klass['$inject']).toEqual(['$timeout']);
@@ -51,7 +51,7 @@ describe('Polycod.Ng1.Component', function(){
       var cmp = Polycod.component({
         selector: 'foo-bar',
         module: 'demo',
-        inject: ['$timeout'],
+        providers: ['$timeout'],
         class: function() {}
       });
       expect(cmp.name).toEqual('fooBar');

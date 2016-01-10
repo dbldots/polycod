@@ -51,8 +51,8 @@ var Polycod;
         var Component = (function () {
             function Component(klass) {
                 this.klass = klass;
-                if (klass.annotations.inject)
-                    this.klass['$inject'] = klass.annotations.inject;
+                if (klass.annotations.providers)
+                    this.klass['$inject'] = klass.annotations.providers;
                 this.name = Polycod.util.dash2Camel(Polycod.util.deBracket(klass.annotations.selector));
                 this.build();
             }
@@ -194,7 +194,7 @@ var Polycod;
         function Component(annotations) {
             return function (target) {
                 validateAnnotations(annotations, 'Component', [
-                    'selector', 'events'
+                    'selector', 'events', 'template', 'templateUrl', 'providers', 'module', 'transclude'
                 ]);
                 return addAnnotations(target, annotations);
             };
@@ -212,7 +212,7 @@ var Polycod;
         function Ng1(annotations) {
             return function (target) {
                 validateAnnotations(annotations, 'Component', [
-                    'inject', 'transclude', 'module'
+                    'providers', 'transclude', 'module'
                 ]);
                 return addAnnotations(target, annotations);
             };

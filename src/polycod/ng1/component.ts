@@ -10,7 +10,7 @@ module Polycod {
 
       constructor(klass) {
         this.klass = klass;
-        if (klass.annotations.inject) this.klass['$inject'] = klass.annotations.inject;
+        if (klass.annotations.providers) this.klass['$inject'] = klass.annotations.providers;
 
         this.name = util.dash2Camel(util.deBracket(klass.annotations.selector));
 

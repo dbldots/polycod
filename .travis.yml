@@ -6,5 +6,4 @@ before_script:
   - npm install -g typescript
   - npm install -g browserify
   - mkdir test/tmp
-  - browserify test/dependencies.js -o test/tmp/dependencies.js && tsc --target ES5 --out test/tmp/polycod.js src/polycod.ts
-script: testem ci
+script: testem -l PhantomJS ci

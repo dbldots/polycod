@@ -3,4 +3,6 @@ node_js:
   - "4.1"
 before_script:
   - npm install -g testem
+  - npm install -g typescript
+  - npm install -g browserify
 script: testem ci

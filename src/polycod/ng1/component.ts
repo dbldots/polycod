@@ -123,8 +123,8 @@ module Polycod {
         transclude(function(clone) {
           angular.forEach(clone, function(cloneEl) {
             if (!cloneEl.attributes) return;
-            var destinationId = cloneEl.attributes["transclude-to"].value;
-            var destination = element.find('[transclude-id="'+ destinationId +'"]');
+            var select = cloneEl.nodeName.toLowerCase();
+            var destination = element.find('content[select="'+ select +'"]');
             if (destination.length) {
               destination.append(cloneEl);
             } else { 

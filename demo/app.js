@@ -17,7 +17,7 @@ Polycod.component({
   selector: 'cmp1',
   module: 'demo',
   inject: ['$element'],
-  template: '<div class="component"><h1>hello {{ name }}&nbsp;<small>(using name from binding)</small></h1><div transclude-id="info"></div></div>',
+  template: '<div class="component"><h1>hello {{ name }}&nbsp;<small>(using name from binding)</small></h1><content select="info"></content></div>',
   events: ['activated', 'deactivated'],
   transclude: true,
   class: function($element) {

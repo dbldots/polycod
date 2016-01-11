@@ -24,7 +24,7 @@ Polycod.component({
   module: 'myApp',
   transclude: true,
   events: ['activated', 'deactivated'],
-  template: '<div transclude-id="info">',
+  template: '<content select="info">',
   class: function() {}
 });
 
@@ -93,7 +93,7 @@ describe('Testing directives', function() {
   it('compiles with transclusion', function() {
     scope = $rootScope.$new();
     scope.userName = 'joe';
-    var element = $compile("<test3><div transclude-to='info'>INFO</div></test3")(scope);
+    var element = $compile("<test3><info>INFO</info></test3")(scope);
     $rootScope.$digest();
     expect(element.html()).toContain('INFO')
   });

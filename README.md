@@ -163,8 +163,8 @@ Polycod has a custom transclusion mechanism that is not quite as nice as what an
   transclude: true,
   template: `
     <h1>HELLO</h1>
-    <div transclude-id="info1"></div>
-    <div transclude-id="info2"></div>
+    <content select="info1"></content>
+    <content select="info2"></content>
   `
 })
 class TsCmp {
@@ -175,8 +175,8 @@ Usage:
 
 ```html
 <ts-cmp>
-  <span transclude-to="info1">INFO1</span>
-  <span transclude-to="info2">INFO2</span>
+  <info1>INFO1</info1>
+  <info2>INFO2</info2>
 </ts-cmp>
 ```
 
@@ -184,8 +184,8 @@ Renders:
 
 ```html
 <h1>HELLO</h1>
-<div transclude-id="info1"><span transclude-to="info1">INFO1</span></div>
-<div transclude-id="info2"><span transclude-to="info2">INFO2</span></div>  
+<content select="info1"><info1">INFO1</info1></content>
+<content select="info2"><info2">INFO2</info2></content>  
 ```
 
 Since `transclude` is angular 1 specific you may want to seperate the annotation which is possible as well:

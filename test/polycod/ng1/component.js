@@ -116,6 +116,6 @@ describe('Testing directives', function() {
     scope.items = ['one']
     var element = $compile("<test4 [items]='items'></test4")(scope);
     $rootScope.$digest();
-    expect(element.html()).toContain('ng-repeat="item in items"')
+    expect(element.html()).toContain('ng-repeat="item in items')
   });
 });

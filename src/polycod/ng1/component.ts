@@ -44,6 +44,7 @@ module Polycod {
       }
 
       private prelink(scope, element, attrs, ctrl) {
+        var self      = this;
         var events    = {};
         var injector  = element.injector();
 
@@ -89,9 +90,9 @@ module Polycod {
         }
 
         // implements functions to emit events
-        if (this.klass.annotations.events) {
-          for (var index in this.klass.annotations.events) {
-            var ev = this.klass.annotations.events[index];
+        if (self.klass.annotations.events) {
+          for (var index in self.klass.annotations.events) {
+            var ev = self.klass.annotations.events[index];
             if (ctrl[ev]) continue;
 
             (function (_event) {
@@ -100,7 +101,7 @@ module Polycod {
 
                 if (!events.hasOwnProperty(_event)) {
                   var $log = injector.get('$log');
-                  $log.info(`${this.name}: no callback set for ${_event}`);
+                  $log.info(`${self.name}: no callback set for ${_event}`);
                   return
                 }
 
@@ -129,29 +130,53 @@ module Polycod {
       }
 
       private postlink(scope, element, attrs, ctrl, transclude) {
+        var self      = this;
+        var injector  = element.injector();
+
+        // call activate ('linked' function)
         (typeof ctrl.activate === 'function') && ctrl.activate();
 
-        if (!this.klass.annotations.transclude) return;
-
         // custom transclusion. from here https://www.airpair.com/angularjs/posts/creating-container-components-part-2-angular-1-directives
-        transclude(function(clone) {
-          angular.forEach(clone, function(cloneEl) {
-            if (!cloneEl.attributes) return;
-            var select = cloneEl.nodeName.toLowerCase();
-            var destination = element.find('content[select="'+ select +'"]');
-            if (destination.length) {
-              destination.append(cloneEl);
-            } else { 
-              cloneEl.remove();
-            }
+        if (self.klass.annotations.transclude) {
+          transclude(function(clone) {
+            angular.forEach(clone, function(cloneEl) {
+              if (!cloneEl.attributes) return;
+              var select = cloneEl.nodeName.toLowerCase();
+              var destination = element.find('content[select="'+ select +'"]');
+              if (destination.length) {
+                destination.append(cloneEl);
+              } else { 
+                cloneEl.remove();
+              }
+            });
           });
-        });
+        }
+
+        // implements host listeners
+        if (self.klass.annotations.host) {
+          for (var key in self.klass.annotations.host) {
+            var cb = util.deParen(self.klass.annotations.host[key]);
+            if (!ctrl[cb]) {
+              var $log = injector.get('$log');
+              $log.info(`${self.name}: host callback ${key} does not exist`);
+              continue;
+            }
+
+            (function (_key, _cb) {
+              element.on(_key, function() {
+                scope.$apply(function () {
+                  ctrl[_cb].apply(ctrl, arguments);
+                });
+              });
+            })(key, cb);
+          }
+        }
       }
 
       private convertTemplate(html) {
         if (!html || !html.length) return;
 
-        html = html.replace(/((\*ng-for="#)([a-zA-Z0-9-_]+)( of )([a-zA-Z0-9-_]+))/g, 'ng-repeat="$3 in $5');
+        html = html.replace(/((\*ng-for="#)([a-zA-Z0-9-_]+)( of )([a-zA-Z0-9-_]+))/g, 'ng-repeat="$3 in $5 track by $index');
         html = html.replace(/\(click\)/g, 'ng-click');
         return html;
       }

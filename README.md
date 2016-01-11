@@ -155,6 +155,24 @@ The HTML that does the connection:
 <ts-cmp (submitted)="onSubmitted($event)"></ts-cmp>
 ```
 
+### Host Events
+
+You can catch events on your DOM host element like this:
+
+```typescript
+@Polycod.Decorators.Component({
+  module: 'demo',
+  selector: 'ts-cmp',
+  host: { 'click': 'onClick()' }
+  template: '<h1>HELLO</h1>'
+})
+class TsCmp {
+  onClick() {
+    console.log('ts-cmp has been clicked!')
+  }
+}
+```
+
 ### Properties (one directional bindings)
 
 This makes a local variable available as property in your component (on the component controller). Any change will be propagated.

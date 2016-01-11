@@ -18,7 +18,13 @@ Polycod.component({
   selector: 'cmp1',
   module: 'demo',
   providers: ['$element', '$timeout'],
-  template: '<div class="component"><h1>hello {{ name }}&nbsp;<small>(using name1 from binding)</small></h1><content select="info"></content><br /><br /><button>Change Name</button></div>',
+  template: '\
+    <div class="component">\
+      <h1>hello {{ name }}&nbsp;<small>(using name1 from binding)</small></h1>\
+      <content select="info"></content>\
+      <br /><br />\
+      <button (click)="changeName()">Change Name</button>\
+    </div>',
   events: ['activated', 'deactivated'],
   transclude: true,
   class: function($element, $timeout) {
@@ -28,18 +34,19 @@ Polycod.component({
       self.activated('yay')
     };
 
-    $element.find('button').on('click', function () {
-      $timeout(function () {
-        self.name = 'jane'; 
-      });
-    });
+    this.changeName = function() {
+      self.name = 'jane';
+    };
   }
 });
 
 Polycod.component({
   selector: 'cmp2',
   module: 'demo',
-  template: '<div class="component"><span *ng-for="#day of days" (click)="onClick()">{{ day }}&nbsp;</span></div>',
+  template: '\
+    <div class="component">\
+      <span *ng-for="#day of days" (click)="onClick()">{{ day }}&nbsp;</span>\
+    </div>',
   class: function() {
     this.onClick = function() {
       alert('clicked a day. is it your favourite day? i won\'t tell anyone.');
@@ -51,15 +58,25 @@ Polycod.component({
   selector: 'cmp4',
   module: 'demo',
   providers: ['$element', '$timeout'],
-  template: '<div class="component"><h1>hello {{ name }}&nbsp;<small>(using name2 from two-way binding)</small></h1><button>Change Name</button></div>',
+  host: { 'mouseover': 'onMouseover()' },
+  template: '\
+    <div class="component">\
+      <h1>hello {{ name }}&nbsp;<small>(using name2 from two-way binding)</small></h1>\
+      <button (click)="changeName()">Change Name</button>\
+      <br /><br />\
+      got {{ mouseOverCount }} mouseover events\
+    </div>',
   class: function($element, $timeout) {
     var self = this;
+    this.mouseOverCount = 0;
 
-    $element.find('button').on('click', function () {
-      $timeout(function () {
-        self.name = 'jane'; 
-      });
-    });
+    this.changeName = function() {
+      self.name = 'jane';
+    };
+
+    this.onMouseover = function() {
+      self.mouseOverCount++;
+    };
   }
 });
 

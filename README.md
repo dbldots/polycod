@@ -271,6 +271,23 @@ class TsCmp {
 Polycod.bootstrap(TsCmp);
 ```
 
+### Component Templates
+
+The inner HTML of your templates will be converted to support angular2 style syntax. This is the list of supported keywords that will be converted to angular1 style syntax:
+
+* *ng-for
+* (click)
+* (dbl-click)
+* (mousedown)
+* (mouseup)
+* (mouseenter)
+* (mouseleave)
+* (mouseover)
+* (keydown)
+* (keyup)
+* (keypress)
+* (change)
+
 ## Todo
 
 Things I would like to see in polycod:

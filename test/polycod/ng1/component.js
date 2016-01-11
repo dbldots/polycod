@@ -35,6 +35,13 @@ Polycod.component({
   class: function() {}
 });
 
+Polycod.component({
+  selector: 'test5',
+  module: 'myApp',
+  template: '<input (click)="onClick()" (keydown)="onKeydown()"></div>',
+  class: function() {}
+});
+
 describe('Polycod.Ng1.Component', function(){
   describe('#constructor', function() {
     it('moves providers to $inject', function(){
@@ -117,5 +124,19 @@ describe('Testing directives', function() {
     var element = $compile("<test4 [items]='items'></test4")(scope);
     $rootScope.$digest();
     expect(element.html()).toContain('ng-repeat="item in items')
+  });
+
+  it('replaces (click) with ng-click', function() {
+    scope = $rootScope.$new();
+    var element = $compile("<test5></test5")(scope);
+    $rootScope.$digest();
+    expect(element.html()).toContain('ng-click')
+  });
+
+  it('replaces (keydown) with ng-keydown', function() {
+    scope = $rootScope.$new();
+    var element = $compile("<test5></test5")(scope);
+    $rootScope.$digest();
+    expect(element.html()).toContain('ng-keydown')
   });
 });

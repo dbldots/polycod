@@ -226,31 +226,12 @@ class TsCmp {
 Polycod.bootstrap(TsCmp);
 ```
 
-## Caveats
-
-### Variable naming
-
-Since polycod is using child scopes internally, don't use the same variable name for property bindings. Using the same name effectively overrides the binding (and actually results in an indefinite loop when requesting the property value).
-
-**Wrong:**
-
-```html
-<ts-cmp [name]="name"></ts-cmp>
-```
-
-**Right:**
-
-```html
-<ts-cmp [name]="userName"></ts-cmp>
-```
-
 ## Todo
 
 Things I would like to see in polycod:
 
 * `host` events
 * Two way bindings
-* Throw error when same variable name is used for properties.
 * Support AMD/CommonJS module strategies
 
 ## Development

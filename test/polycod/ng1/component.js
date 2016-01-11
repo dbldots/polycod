@@ -82,6 +82,18 @@ describe('Testing directives', function() {
     expect(element.html()).toContain('HELLO jane')
   });
 
+  it('compiles with two way binding', function() {
+    scope = $rootScope.$new();
+    scope.user = 'joe';
+    var element = $compile("<test1 [name]=\"user\"></test1")(scope);
+    $rootScope.$digest();
+    expect(element.html()).toContain('HELLO joe')
+
+    scope.user = 'jane';
+    $rootScope.$digest();
+    expect(element.html()).toContain('HELLO jane')
+  });
+
   // hm, does not work in test run (injector is undefined), but works in real world.
   xit('compiles with events', function() {
     scope = $rootScope.$new();
@@ -102,7 +114,7 @@ describe('Testing directives', function() {
     scope = $rootScope.$new();
     scope.userName = 'joe';
     scope.items = ['one']
-    var element = $compile("<test4></test4")(scope);
+    var element = $compile("<test4 [items]='items'></test4")(scope);
     $rootScope.$digest();
     expect(element.html()).toContain('ng-repeat="item in items"')
   });

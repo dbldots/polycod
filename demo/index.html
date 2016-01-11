@@ -19,11 +19,17 @@
   </style>
 </head>
   <body>
-    <cmp1 [name]="userName" (activated)="onActivated($event)">
+    <pre>name1: {{ name1 }}</pre>
+    <pre>name2: {{ name2 }}</pre>
+    <cmp1 [name]="name1" (activated)="onActivated($event)">
       <info>-this is transcluded-</info>
     </cmp1>
+    <cmp4 [(name)]="name2"></cmp4>
     <cmp2 [days]="weekDays"></cmp2>
+    <button type="button" ng-click="addItem()">Add Item</button>
+
     <cmp3></cmp3>
+
 
     <h3 ng-if="gotActivated">roundtrip done.</h3>
 

@@ -35,6 +35,12 @@ describe('Polycod.util', function(){
     });
   });
 
+  describe('.isNgTwoWayBinding', function() {
+    it('should detect two-way binding attribute', function(){
+      expect(Polycod.util.isNgTwoWayBinding('[(model)]')).toEqual(true);
+    });
+  });
+
   describe('.isNgAttribute', function() {
     it('should detect attribute', function(){
       expect(Polycod.util.isNgAttribute('staticAttr')).toEqual(true);

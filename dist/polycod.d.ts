@@ -7,6 +7,7 @@ declare module Polycod {
         function dash2Camel(s: string): string;
         function isNgEvent(s: string): Boolean;
         function isNgProperty(s: string): Boolean;
+        function isNgTwoWayBinding(s: string): Boolean;
         function isNgAttribute(s: string): Boolean;
     }
 }

@@ -25,7 +25,7 @@ module Polycod {
             // bindToController does not work with attributes in parenthesis or brackets
             // instead we use our own proxying (see below)
             bindToController: false,
-            scope:        true,
+            scope:        {},
             compile:      this.compile.bind(this),
             templateUrl:  this.klass.annotations.templateUrl,
             template:     this.klass.annotations.template,
@@ -55,6 +55,20 @@ module Polycod {
             name = util.deAll(name);
             events[name] = value;
           }
+          // setup two way bindings
+          else if (util.isNgTwoWayBinding(key)) {
+            name = util.deAll(key);
+            ctrl[name] = undefined;
+
+            (function (_name, _value) {
+              scope.$parent.$watch(_value, (v) => {
+                ctrl[_name] = v;
+              });
+              scope.$watch(_name, (v) => {
+                scope.$parent[_value] = v;
+              });
+            })(name, value);
+          }
           // setup watchers for properties
           else if (util.isNgProperty(key)) {
             var name = key.replace(/^bind-/, '');
@@ -62,7 +76,7 @@ module Polycod {
             ctrl[name] = undefined;
 
             (function (_name) {
-              scope.$watch(value, (v) => {
+              scope.$parent.$watch(value, (v) => {
                 ctrl[_name] = v;
               });
             })(name);
@@ -94,7 +108,7 @@ module Polycod {
                 var args = [].slice.call(arguments);
                 var data = args.length <= 1 ? args[0] : args;
                 var event = { data: data };
-                fn(scope, { $event: event });
+                fn(scope.$parent, { $event: event });
               }
             })(ev);
           }

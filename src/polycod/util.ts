@@ -28,6 +28,10 @@ module Polycod {
       return /(^\[(.+)\]$)/.test(s) || s.indexOf('bind-') === 0;
     };
 
+    export function isNgTwoWayBinding (s: string): Boolean {
+      return /(^\[\((.+)\)\]$)/.test(s);
+    };
+
     export function isNgAttribute (s: string): Boolean {
       return !isNgEvent(s) && !isNgProperty(s);
     };

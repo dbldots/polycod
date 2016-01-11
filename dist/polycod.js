@@ -36,6 +36,11 @@ var Polycod;
         }
         util.isNgProperty = isNgProperty;
         ;
+        function isNgTwoWayBinding(s) {
+            return /(^\[\((.+)\)\]$)/.test(s);
+        }
+        util.isNgTwoWayBinding = isNgTwoWayBinding;
+        ;
         function isNgAttribute(s) {
             return !isNgEvent(s) && !isNgProperty(s);
         }
@@ -65,7 +70,7 @@ var Polycod;
                         // bindToController does not work with attributes in parenthesis or brackets
                         // instead we use our own proxying (see below)
                         bindToController: false,
-                        scope: true,
+                        scope: {},
                         compile: _this.compile.bind(_this),
                         templateUrl: _this.klass.annotations.templateUrl,
                         template: _this.klass.annotations.template,
@@ -90,12 +95,24 @@ var Polycod;
                         name = Polycod.util.deAll(name);
                         events[name] = value;
                     }
+                    else if (Polycod.util.isNgTwoWayBinding(key)) {
+                        name = Polycod.util.deAll(key);
+                        ctrl[name] = undefined;
+                        (function (_name, _value) {
+                            scope.$parent.$watch(_value, function (v) {
+                                ctrl[_name] = v;
+                            });
+                            scope.$watch(_name, function (v) {
+                                scope.$parent[_value] = v;
+                            });
+                        })(name, value);
+                    }
                     else if (Polycod.util.isNgProperty(key)) {
                         var name = key.replace(/^bind-/, '');
                         name = Polycod.util.deAll(name);
                         ctrl[name] = undefined;
                         (function (_name) {
-                            scope.$watch(value, function (v) {
+                            scope.$parent.$watch(value, function (v) {
                                 ctrl[_name] = v;
                             });
                         })(name);
@@ -122,7 +139,7 @@ var Polycod;
                                 var args = [].slice.call(arguments);
                                 var data = args.length <= 1 ? args[0] : args;
                                 var event = { data: data };
-                                fn(scope, { $event: event });
+                                fn(scope.$parent, { $event: event });
                             };
                         })(ev);
                     }

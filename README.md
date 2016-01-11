@@ -94,6 +94,33 @@ class TsCmp {
 
 .. will display: `HELLO joe`
 
+### Two-Way Bindings
+
+Polycod also supports two-way bindings.
+
+Example:
+
+```javascript
+var scope = $rootScope.$new()
+scope.userName = 'jane';
+```
+
+```typescript
+@Polycod.Decorators.Component({
+  module: 'demo',
+  selector: 'ts-cmp',
+  template: '<h1>HELLO {{ name }}</h1>'
+})
+class TsCmp {
+}
+```
+
+```html
+<ts-cmp [(name)]="userName"></ts-cmp>
+```
+
+.. will display: `HELLO joe`. Any change to `name` will also be applied to the source (the scope's `userName` in this case).
+
 ### Events
 
 It is easily possible to setup events emitted by your components.
@@ -230,8 +257,6 @@ Polycod.bootstrap(TsCmp);
 
 Things I would like to see in polycod:
 
-* `host` events
-* Two way bindings
 * Support AMD/CommonJS module strategies
 
 ## Development

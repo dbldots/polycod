@@ -251,6 +251,7 @@ Things I would like to see in polycod:
 * `host` events
 * Two way bindings
 * Throw error when same variable name is used for properties.
+* Support AMD/CommonJS module strategies
 
 ## Development
 

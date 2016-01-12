@@ -276,6 +276,8 @@ Polycod.bootstrap(TsCmp);
 The inner HTML of your templates will be converted to support angular2 style syntax. This is the list of supported keywords that will be converted to angular1 style syntax:
 
 * *ng-for
+* [hidden]
+* [ng-model]
 * (click)
 * (dbl-click)
 * (mousedown)

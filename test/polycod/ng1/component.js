@@ -102,7 +102,7 @@ describe('Testing directives', function() {
   });
 
   // hm, does not work in test run (injector is undefined), but works in real world.
-  xit('compiles with events', function() {
+  it('compiles with events', function() {
     scope = $rootScope.$new();
     scope.onActivated = function() {};
     var element = $compile("<test2 (activated)=\"onActivated($event)\"></test2")(scope);

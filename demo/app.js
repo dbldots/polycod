@@ -17,7 +17,7 @@ angular.module('demo').run(function($rootScope) {
 Polycod.component({
   selector: 'cmp1',
   module: 'demo',
-  providers: ['$element', '$timeout'],
+  providers: ['$element'],
   template: '\
     <div class="component">\
       <h1>hello {{ name }}&nbsp;<small>(using name1 from binding)</small></h1>\
@@ -27,7 +27,7 @@ Polycod.component({
     </div>',
   events: ['activated', 'deactivated'],
   transclude: true,
-  class: function($element, $timeout) {
+  class: function($element) {
     var self = this;
 
     this.activate = function() {
@@ -57,7 +57,7 @@ Polycod.component({
 Polycod.component({
   selector: 'cmp4',
   module: 'demo',
-  providers: ['$element', '$timeout'],
+  providers: ['$element'],
   host: { 'mouseover': 'onMouseover()' },
   template: '\
     <div class="component">\
@@ -66,7 +66,7 @@ Polycod.component({
       <br /><br />\
       got {{ mouseOverCount }} mouseover events\
     </div>',
-  class: function($element, $timeout) {
+  class: function($element) {
     var self = this;
     this.mouseOverCount = 0;
 

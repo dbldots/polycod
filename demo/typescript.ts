@@ -1,7 +1,8 @@
 declare var Polycod;
 
 @Polycod.Decorators.Component({
-  selector: 'cmp3'
+  selector: 'cmp3',
+  host: { foo: 'bar()' }
 })
 @Polycod.Decorators.View({
   template: '<div class="component">this is a typescript component</div>'

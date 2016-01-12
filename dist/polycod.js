@@ -63,20 +63,21 @@ var Polycod;
             }
             Component.prototype.build = function () {
                 var _this = this;
-                angular.module(this.klass.annotations.module).directive(this.name, function () {
-                    return {
-                        controller: _this.klass,
-                        controllerAs: _this.name,
-                        // bindToController does not work with attributes in parenthesis or brackets
-                        // instead we use our own proxying (see below)
-                        bindToController: false,
-                        scope: {},
-                        compile: _this.compile.bind(_this),
-                        templateUrl: _this.klass.annotations.templateUrl,
-                        template: _this.klass.annotations.template,
-                        transclude: _this.klass.annotations.transclude,
-                    };
-                });
+                angular.module(this.klass.annotations.module).directive(this.name, ['$injector', function ($injector) {
+                        _this.$injector = $injector;
+                        return {
+                            controller: _this.klass,
+                            controllerAs: _this.name,
+                            // bindToController does not work with attributes in parenthesis or brackets
+                            // instead we use our own proxying (see below)
+                            bindToController: false,
+                            scope: {},
+                            compile: _this.compile.bind(_this),
+                            templateUrl: _this.klass.annotations.templateUrl,
+                            template: _this.klass.annotations.template,
+                            transclude: _this.klass.annotations.transclude,
+                        };
+                    }]);
             };
             Component.prototype.compile = function (element, attrs) {
                 element[0].innerHTML = this.convertTemplate(element[0].innerHTML);
@@ -86,9 +87,15 @@ var Polycod;
                 };
             };
             Component.prototype.prelink = function (scope, element, attrs, ctrl) {
+                var _this = this;
                 var self = this;
                 var events = {};
-                var injector = element.injector();
+                // make $injector available
+                ctrl.$injector = this.$injector;
+                // $run enforces a digest run
+                ctrl.$apply = function (fn) {
+                    _this.$injector.get('$timeout').call(_this, fn.bind(_this));
+                };
                 for (var key in attrs) {
                     var value = attrs[key];
                     if (Polycod.util.isNgEvent(key)) {
@@ -130,13 +137,11 @@ var Polycod;
                             continue;
                         (function (_event) {
                             ctrl[_event] = function () {
-                                var $parse = injector.get('$parse');
                                 if (!events.hasOwnProperty(_event)) {
-                                    var $log = injector.get('$log');
-                                    $log.info(self.name + ": no callback set for " + _event);
+                                    self.$injector.get('$log').info(self.name + ": no callback set for " + _event);
                                     return;
                                 }
-                                var fn = $parse(events[_event]);
+                                var fn = self.$injector.get('$parse')(events[_event]);
                                 var args = [].slice.call(arguments);
                                 var data = args.length <= 1 ? args[0] : args;
                                 var event = { data: data };
@@ -146,21 +151,29 @@ var Polycod;
                     }
                 }
                 // proxy from scope to controller
-                for (key in ctrl) {
-                    if (key.indexOf('$') === 0)
-                        continue;
-                    (function (_key) {
-                        Object.defineProperty(scope, _key, {
-                            get: function () {
-                                return ctrl[_key];
-                            }
-                        });
-                    })(key);
-                }
+                var syncScopeCtrl = function () {
+                    for (key in ctrl) {
+                        if (key.indexOf('$') === 0)
+                            continue;
+                        if (scope.hasOwnProperty(key))
+                            continue;
+                        (function (_key) {
+                            Object.defineProperty(scope, _key, {
+                                get: function () {
+                                    return ctrl[_key];
+                                },
+                                set: function (v) {
+                                    return ctrl[_key] = v;
+                                }
+                            });
+                        })(key);
+                    }
+                };
+                syncScopeCtrl();
+                scope.$watch(syncScopeCtrl);
             };
             Component.prototype.postlink = function (scope, element, attrs, ctrl, transclude) {
                 var self = this;
-                var injector = element.injector();
                 // call activate ('linked' function)
                 (typeof ctrl.activate === 'function') && ctrl.activate();
                 // custom transclusion. from here https://www.airpair.com/angularjs/posts/creating-container-components-part-2-angular-1-directives
@@ -185,8 +198,7 @@ var Polycod;
                     for (var key in self.klass.annotations.host) {
                         var cb = Polycod.util.deParen(self.klass.annotations.host[key]);
                         if (!ctrl[cb]) {
-                            var $log = injector.get('$log');
-                            $log.info(self.name + ": host callback " + key + " does not exist");
+                            self.$injector.get('$log').info(self.name + ": host callback " + key + " does not exist");
                             continue;
                         }
                         (function (_key, _cb) {
@@ -253,7 +265,7 @@ var Polycod;
         Decorators.Component = Component;
         function View(annotations) {
             return function (target) {
-                validateAnnotations(annotations, 'Component', [
+                validateAnnotations(annotations, 'View', [
                     'template', 'templateUrl'
                 ]);
                 return addAnnotations(target, annotations);
@@ -262,7 +274,7 @@ var Polycod;
         Decorators.View = View;
         function Ng1(annotations) {
             return function (target) {
-                validateAnnotations(annotations, 'Component', [
+                validateAnnotations(annotations, 'Ng1', [
                     'providers', 'transclude', 'module'
                 ]);
                 return addAnnotations(target, annotations);

@@ -15,8 +15,9 @@ declare var angular: any;
 declare module Polycod {
     module Ng1 {
         class Component {
-            klass: any;
             name: string;
+            klass: any;
+            $injector: any;
             constructor(klass: any);
             private build();
             private compile(element, attrs);

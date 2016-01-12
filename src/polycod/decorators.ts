@@ -27,7 +27,7 @@ module Polycod {
     }
     export function View (annotations) {
       return function (target) {
-        validateAnnotations(annotations, 'Component', [
+        validateAnnotations(annotations, 'View', [
           'template', 'templateUrl'
         ]);
         return addAnnotations(target, annotations);
@@ -35,7 +35,7 @@ module Polycod {
     }
     export function Ng1 (annotations) {
       return function (target) {
-        validateAnnotations(annotations, 'Component', [
+        validateAnnotations(annotations, 'Ng1', [
           'providers', 'transclude', 'module'
         ]);
         return addAnnotations(target, annotations);

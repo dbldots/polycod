@@ -5,8 +5,9 @@ declare var angular;
 module Polycod {
   export module Ng1 {
     export class Component {
-      klass: any;
       name: string;   // directive name
+      klass: any;
+      $injector: any;
 
       constructor(klass) {
         this.klass = klass;
@@ -18,7 +19,9 @@ module Polycod {
       }
 
       private build() {
-        angular.module(this.klass.annotations.module).directive(this.name, () => {
+        angular.module(this.klass.annotations.module).directive(this.name, ['$injector', ($injector) => {
+          this.$injector  = $injector;
+
           return {
             controller:   this.klass,
             controllerAs: this.name,
@@ -31,7 +34,7 @@ module Polycod {
             template:     this.klass.annotations.template,
             transclude:   this.klass.annotations.transclude,
           }
-        });
+        }]);
       }
 
       private compile(element, attrs) {
@@ -46,7 +49,13 @@ module Polycod {
       private prelink(scope, element, attrs, ctrl) {
         var self      = this;
         var events    = {};
-        var injector  = element.injector();
+
+        // make $injector available
+        ctrl.$injector = this.$injector;
+        // $run enforces a digest run
+        ctrl.$apply = (fn) => {
+          this.$injector.get('$timeout').call(this, fn.bind(this));
+        }
 
         for (var key in attrs) {
           var value = attrs[key];
@@ -97,15 +106,12 @@ module Polycod {
 
             (function (_event) {
               ctrl[_event] = function() {
-                var $parse = injector.get('$parse');
-
                 if (!events.hasOwnProperty(_event)) {
-                  var $log = injector.get('$log');
-                  $log.info(`${self.name}: no callback set for ${_event}`);
+                  self.$injector.get('$log').info(`${self.name}: no callback set for ${_event}`);
                   return
                 }
 
-                var fn = $parse(events[_event]);
+                var fn = self.$injector.get('$parse')(events[_event]);
                 var args = [].slice.call(arguments);
                 var data = args.length <= 1 ? args[0] : args;
                 var event = { data: data };
@@ -116,22 +122,29 @@ module Polycod {
         }
 
         // proxy from scope to controller
-        for (key in ctrl) {
-          if (key.indexOf('$') === 0) continue;
+        var syncScopeCtrl = function() {
+          for (key in ctrl) {
+            if (key.indexOf('$') === 0) continue;
+            if (scope.hasOwnProperty(key)) continue;
 
-          (function (_key) {
-            Object.defineProperty(scope, _key, {
-              get: () => {
-                return ctrl[_key];
-              }
-            });
-          })(key);
-        }
+            (function (_key) {
+              Object.defineProperty(scope, _key, {
+                get: () => {
+                  return ctrl[_key];
+                },
+                set: (v) => {
+                  return ctrl[_key] = v;
+                }
+              });
+            })(key);
+          }
+        };
+        syncScopeCtrl();
+        scope.$watch(syncScopeCtrl);
       }
 
       private postlink(scope, element, attrs, ctrl, transclude) {
-        var self      = this;
-        var injector  = element.injector();
+        var self = this;
 
         // call activate ('linked' function)
         (typeof ctrl.activate === 'function') && ctrl.activate();
@@ -157,8 +170,7 @@ module Polycod {
           for (var key in self.klass.annotations.host) {
             var cb = util.deParen(self.klass.annotations.host[key]);
             if (!ctrl[cb]) {
-              var $log = injector.get('$log');
-              $log.info(`${self.name}: host callback ${key} does not exist`);
+              self.$injector.get('$log').info(`${self.name}: host callback ${key} does not exist`);
               continue;
             }
 

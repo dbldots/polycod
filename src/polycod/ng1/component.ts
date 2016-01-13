@@ -58,11 +58,11 @@ module Polycod {
         }
 
         var changeNotification = (key, value) => {
-          if (!ctrl.hasOwnProperty('ngOnChanges')) return;
+          if (!ctrl.ngOnChanges) return;
 
           var changes = {}
           changes[key] = { currentValue: value };
-          ctrl.ngOnChanges({ changes: changes });
+          ctrl.ngOnChanges(changes);
         };
 
         for (var key in attrs) {

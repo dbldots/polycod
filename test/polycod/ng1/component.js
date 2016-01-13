@@ -169,11 +169,11 @@ describe('Testing directives', function() {
     scope.userName = 'jeremy';
     $rootScope.$digest();
 
-    expect(controller.ngOnChanges).toHaveBeenCalledWith({ changes: { name: { currentValue: 'jeremy'  } } });
+    expect(controller.ngOnChanges).toHaveBeenCalledWith({ name: { currentValue: 'jeremy'  } });
 
     controller.name = 'johanna';
     $rootScope.$digest();
 
-    expect(controller.ngOnChanges).toHaveBeenCalledWith({ changes: { name: { currentValue: 'johanna'  } } });
+    expect(controller.ngOnChanges).toHaveBeenCalledWith({ name: { currentValue: 'johanna'  } });
   });
 });

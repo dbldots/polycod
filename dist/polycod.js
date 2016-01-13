@@ -97,11 +97,11 @@ var Polycod;
                     _this.$injector.get('$timeout').call(_this, fn.bind(_this));
                 };
                 var changeNotification = function (key, value) {
-                    if (!ctrl.hasOwnProperty('ngOnChanges'))
+                    if (!ctrl.ngOnChanges)
                         return;
                     var changes = {};
                     changes[key] = { currentValue: value };
-                    ctrl.ngOnChanges({ changes: changes });
+                    ctrl.ngOnChanges(changes);
                 };
                 for (var key in attrs) {
                     var value = attrs[key];

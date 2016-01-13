@@ -77,6 +77,10 @@ Polycod.component({
     this.onMouseover = function() {
       self.mouseOverCount++;
     };
+
+    this.ngOnChanges = function(changes) {
+      console.log('cmp4: got property changes', changes);
+    }
   }
 });
 

@@ -96,6 +96,13 @@ var Polycod;
                 ctrl.$apply = function (fn) {
                     _this.$injector.get('$timeout').call(_this, fn.bind(_this));
                 };
+                var changeNotification = function (key, value) {
+                    if (!ctrl.hasOwnProperty('ngOnChanges'))
+                        return;
+                    var changes = {};
+                    changes[key] = { currentValue: value };
+                    ctrl.ngOnChanges({ changes: changes });
+                };
                 for (var key in attrs) {
                     var value = attrs[key];
                     if (Polycod.util.isNgEvent(key)) {
@@ -103,27 +110,22 @@ var Polycod;
                         name = Polycod.util.deAll(name);
                         events[name] = value;
                     }
-                    else if (Polycod.util.isNgTwoWayBinding(key)) {
-                        name = Polycod.util.deAll(key);
+                    else if (Polycod.util.isNgProperty(key)) {
+                        var isTwoWay = Polycod.util.isNgTwoWayBinding(key);
+                        var name = key.replace(/^bind-/, '');
+                        name = Polycod.util.deAll(name);
                         ctrl[name] = undefined;
                         (function (_name, _value) {
                             scope.$parent.$watch(_value, function (v) {
                                 ctrl[_name] = v;
                             });
                             scope.$watch(_name, function (v) {
-                                scope.$parent[_value] = v;
+                                // for two way bindings we have to write back the value onto the parent scope
+                                if (isTwoWay)
+                                    scope.$parent[_value] = v;
+                                changeNotification(_name, v);
                             });
                         })(name, value);
-                    }
-                    else if (Polycod.util.isNgProperty(key)) {
-                        var name = key.replace(/^bind-/, '');
-                        name = Polycod.util.deAll(name);
-                        ctrl[name] = undefined;
-                        (function (_name) {
-                            scope.$parent.$watch(value, function (v) {
-                                ctrl[_name] = v;
-                            });
-                        })(name);
                     }
                     else {
                         ctrl[key] = value;

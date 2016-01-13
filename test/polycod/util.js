@@ -33,6 +33,10 @@ describe('Polycod.util', function(){
     it('should detect property attribute', function(){
       expect(Polycod.util.isNgProperty('[model]')).toEqual(true);
     });
+
+    it('should detect two-way binding property attribute', function(){
+      expect(Polycod.util.isNgProperty('[(model)]')).toEqual(true);
+    });
   });
 
   describe('.isNgTwoWayBinding', function() {

@@ -42,6 +42,15 @@ Polycod.component({
   class: function() {}
 });
 
+Polycod.component({
+  selector: 'test6',
+  module: 'myApp',
+  template: '<h1>HELLO {{ name }}</h1>',
+  class: function() {
+    this.ngOnChanges = function(changes) {}
+  }
+});
+
 describe('Polycod.Ng1.Component', function(){
   describe('#constructor', function() {
     it('moves providers to $inject', function(){
@@ -91,14 +100,20 @@ describe('Testing directives', function() {
 
   it('compiles with two way binding', function() {
     scope = $rootScope.$new();
-    scope.user = 'joe';
-    var element = $compile("<test1 [name]=\"user\"></test1")(scope);
+    scope.user      = 'joe';
+    var element     = $compile("<test1 [(name)]=\"user\"></test1")(scope);
+    var controller  = element.controller('test1');
     $rootScope.$digest();
     expect(element.html()).toContain('HELLO joe')
 
     scope.user = 'jane';
     $rootScope.$digest();
+    expect(controller.name).toEqual('jane');
     expect(element.html()).toContain('HELLO jane')
+
+    controller.name = 'jeremy';
+    $rootScope.$digest();
+    expect(scope.user).toEqual('jeremy')
   });
 
   // hm, does not work in test run (injector is undefined), but works in real world.
@@ -138,5 +153,27 @@ describe('Testing directives', function() {
     var element = $compile("<test5></test5")(scope);
     $rootScope.$digest();
     expect(element.html()).toContain('ng-keydown')
+  });
+
+  it('calls ngOnChanges when binding changed', function() {
+    scope = $rootScope.$new();
+    scope.userName  = 'joe';
+    var element     = $compile("<test6 [name]=\"userName\"></test6")(scope);
+    var controller  = element.controller('test6');
+    $rootScope.$digest();
+
+    scope.userName  = 'jane';
+    expect(element.html()).toContain('HELLO joe')
+
+    spyOn(controller, 'ngOnChanges')
+    scope.userName = 'jeremy';
+    $rootScope.$digest();
+
+    expect(controller.ngOnChanges).toHaveBeenCalledWith({ changes: { name: { currentValue: 'jeremy'  } } });
+
+    controller.name = 'johanna';
+    $rootScope.$digest();
+
+    expect(controller.ngOnChanges).toHaveBeenCalledWith({ changes: { name: { currentValue: 'johanna'  } } });
   });
 });

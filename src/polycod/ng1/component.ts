@@ -57,6 +57,14 @@ module Polycod {
           this.$injector.get('$timeout').call(this, fn.bind(this));
         }
 
+        var changeNotification = (key, value) => {
+          if (!ctrl.hasOwnProperty('ngOnChanges')) return;
+
+          var changes = {}
+          changes[key] = { currentValue: value };
+          ctrl.ngOnChanges({ changes: changes });
+        };
+
         for (var key in attrs) {
           var value = attrs[key];
 
@@ -65,31 +73,23 @@ module Polycod {
             name = util.deAll(name);
             events[name] = value;
           }
-          // setup two way bindings
-          else if (util.isNgTwoWayBinding(key)) {
-            name = util.deAll(key);
-            ctrl[name] = undefined;
+          // setup watchers for properties
+          else if (util.isNgProperty(key)) {
+            var isTwoWay = util.isNgTwoWayBinding(key);
+            var name     = key.replace(/^bind-/, '');
+            name         = util.deAll(name);
+            ctrl[name]   = undefined;
 
             (function (_name, _value) {
               scope.$parent.$watch(_value, (v) => {
                 ctrl[_name] = v;
               });
               scope.$watch(_name, (v) => {
-                scope.$parent[_value] = v;
+                // for two way bindings we have to write back the value onto the parent scope
+                if (isTwoWay) scope.$parent[_value] = v;
+                changeNotification(_name, v);
               });
             })(name, value);
-          }
-          // setup watchers for properties
-          else if (util.isNgProperty(key)) {
-            var name = key.replace(/^bind-/, '');
-            name = util.deAll(name);
-            ctrl[name] = undefined;
-
-            (function (_name) {
-              scope.$parent.$watch(value, (v) => {
-                ctrl[_name] = v;
-              });
-            })(name);
           }
 
           // copy static attributes on to controller

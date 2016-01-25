@@ -1,6 +1,6 @@
 {
   "name": "polycod",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "polyfill library to write angular2 looking angular1 compontents",
   "main": "dist/polycod.js",
   "directories": {

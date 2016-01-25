@@ -13,7 +13,7 @@ Polycod.component({
   events: ['activated', 'deactivated'],
   template: '<h1>bright side.</h1>',
   class: function() {
-    this.activate = function() {
+    this.ngAfterViewInit = function() {
       this.activated('yay');
     }.bind(this);
   }

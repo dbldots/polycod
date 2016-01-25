@@ -11,7 +11,7 @@ declare var Polycod;
   module: 'demo'
 })
 class Cmp3 {
-  activate() {
+  ngAfterViewInit() {
     console.log('cmp3 activated');
   }
 }

@@ -176,8 +176,12 @@ var Polycod;
             };
             Component.prototype.postlink = function (scope, element, attrs, ctrl, transclude) {
                 var self = this;
-                // call activate ('linked' function)
-                (typeof ctrl.activate === 'function') && ctrl.activate();
+                // call ngAfterViewInit ('linked' function)
+                (typeof ctrl.ngAfterViewInit === 'function') && ctrl.ngAfterViewInit();
+                // call ngOnDestroy when scope is destroyed
+                scope.$on('$destroy', function () {
+                    (typeof ctrl.ngOnDestroy === 'function') && ctrl.ngOnDestroy();
+                });
                 // custom transclusion. from here https://www.airpair.com/angularjs/posts/creating-container-components-part-2-angular-1-directives
                 if (self.klass.annotations.transclude) {
                     transclude(function (clone) {

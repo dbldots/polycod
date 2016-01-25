@@ -252,9 +252,10 @@ class TsCmp {
 }
 ```
 
-### Activate function
+### Activate/Destroy functions
 
-Expose a function called `activate` on your controller class. It is called once an instance of your component got rendered (*linked* in angular 1 lingo).
+Expose a function called `ngAfterViewInit` on your controller class. It is called once an instance of your component got rendered (*linked* in angular 1 lingo).
+Also a lifecycle hook for `ngOnDestroy` is available.
 
 ```typescript
 @Polycod.Decorators.Component({
@@ -263,8 +264,11 @@ Expose a function called `activate` on your controller class. It is called once 
   template: '<h1>HELLO</h1>',
 })
 class TsCmp {
-  activate() {
+  ngAfterViewInit() {
   	console.log('rendered');
+  }
+  ngOnDestroy() {
+  	console.log('destroyed');
   }
 }
 

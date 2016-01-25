@@ -30,7 +30,7 @@ Polycod.component({
   class: function($element) {
     var self = this;
 
-    this.activate = function() {
+    this.ngAfterViewInit = function() {
       self.activated('yay')
     };
 

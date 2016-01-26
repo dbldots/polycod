@@ -77,6 +77,12 @@ Polycod.bootstrap(TsCmp);
 
 ### Bindings
 
+__CAVEATS__
+
+* HTML is case-insensitive. thus `<cmp [userName]="name"` will not work
+* Dashes will be converted to underscores: `<cmp [user-name]="name"` is the same as `<cmp [user_name]="name">`
+
+
 Polycod allows you to bind to your controllers directly.
 
 Example:
@@ -120,6 +126,25 @@ class TsCmp {
 ```
 
 .. will display: `HELLO joe`. Any change to `name` will also be applied to the source (the scope's `userName` in this case).
+
+### Property change Events
+
+If your component exposes an `ngOnChanges` function that one will be called whenever any of the properties change.
+
+Example:
+
+```typescript
+@Polycod.Decorators.Component({
+  module: 'demo',
+  selector: 'ts-cmp',
+  template: '<h1>HELLO {{ name }}</h1>'
+})
+class TsCmp {
+  this.ngOnChanges = function(changes) {
+    console.log(changes.name.currentValue);
+  };
+}
+```
 
 ### Events
 

@@ -23,6 +23,12 @@ describe('Polycod.util', function(){
     });
   });
 
+  describe('.camel2Underscore', function() {
+    it('should convert from camel case to underscore', function(){
+      expect(Polycod.util.camel2Underscore('fooBarJoe')).toEqual('foo_bar_joe');
+    });
+  });
+
   describe('.isNgEvent', function() {
     it('should detect event attribute', function(){
       expect(Polycod.util.isNgEvent('(activated)')).toEqual(true);

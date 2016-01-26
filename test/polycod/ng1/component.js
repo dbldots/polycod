@@ -3,7 +3,7 @@ var app = angular.module('myApp', []);
 Polycod.component({
   selector: 'test1',
   module: 'myApp',
-  template: '<h1>HELLO {{ name }}</h1>',
+  template: '<h1>HELLO {{ user_name }}</h1>',
   class: function() {}
 });
 
@@ -89,7 +89,7 @@ describe('Testing directives', function() {
   it('compiles with binding', function() {
     scope = $rootScope.$new();
     scope.userName = 'joe';
-    var element = $compile("<test1 [name]=\"userName\"></test1")(scope);
+    var element = $compile("<test1 [user_name]=\"userName\"></test1")(scope);
     $rootScope.$digest();
     expect(element.html()).toContain('HELLO joe')
 
@@ -101,17 +101,17 @@ describe('Testing directives', function() {
   it('compiles with two way binding', function() {
     scope = $rootScope.$new();
     scope.user      = 'joe';
-    var element     = $compile("<test1 [(name)]=\"user\"></test1")(scope);
+    var element     = $compile("<test1 [(user_name)]=\"user\"></test1")(scope);
     var controller  = element.controller('test1');
     $rootScope.$digest();
     expect(element.html()).toContain('HELLO joe')
 
     scope.user = 'jane';
     $rootScope.$digest();
-    expect(controller.name).toEqual('jane');
+    expect(controller.user_name).toEqual('jane');
     expect(element.html()).toContain('HELLO jane')
 
-    controller.name = 'jeremy';
+    controller.user_name = 'jeremy';
     $rootScope.$digest();
     expect(scope.user).toEqual('jeremy')
   });

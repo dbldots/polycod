@@ -26,6 +26,12 @@ var Polycod;
         }
         util.dash2Camel = dash2Camel;
         ;
+        function camel2Underscore(s) {
+            return s.replace(/\.?([A-Z]+)/g, function (x, y) {
+                return "_" + y.toLowerCase();
+            });
+        }
+        util.camel2Underscore = camel2Underscore;
         function isNgEvent(s) {
             return /(^\((.+)\)$)/.test(s) || s.indexOf('on-') === 0;
         }
@@ -114,6 +120,7 @@ var Polycod;
                         var isTwoWay = Polycod.util.isNgTwoWayBinding(key);
                         var name = key.replace(/^bind-/, '');
                         name = Polycod.util.deAll(name);
+                        name = Polycod.util.camel2Underscore(name);
                         ctrl[name] = undefined;
                         (function (_name, _value) {
                             scope.$parent.$watch(_value, function (v) {

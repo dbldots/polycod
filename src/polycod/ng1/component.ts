@@ -78,6 +78,7 @@ module Polycod {
             var isTwoWay = util.isNgTwoWayBinding(key);
             var name     = key.replace(/^bind-/, '');
             name         = util.deAll(name);
+            name         = util.camel2Underscore(name);
             ctrl[name]   = undefined;
 
             (function (_name, _value) {

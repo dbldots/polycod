@@ -5,6 +5,7 @@ declare module Polycod {
         function deParen(s: string): string;
         function deAll(s: string): string;
         function dash2Camel(s: string): string;
+        function camel2Underscore(s: string): string;
         function isNgEvent(s: string): Boolean;
         function isNgProperty(s: string): Boolean;
         function isNgTwoWayBinding(s: string): Boolean;

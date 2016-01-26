@@ -20,6 +20,12 @@ module Polycod {
       });
     };
 
+    export function camel2Underscore (s: string): string {
+      return s.replace(/\.?([A-Z]+)/g, function (x,y) {
+        return "_" + y.toLowerCase()
+      });
+    }
+
     export function isNgEvent (s: string): Boolean {
       return /(^\((.+)\)$)/.test(s) || s.indexOf('on-') === 0;
     };

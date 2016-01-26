@@ -140,7 +140,7 @@ Example:
   template: '<h1>HELLO {{ name }}</h1>'
 })
 class TsCmp {
-  this.ngOnChanges = function(changes) {
+  ngOnChanges(changes) {
     console.log(changes.name.currentValue);
   };
 }

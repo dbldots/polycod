@@ -306,7 +306,7 @@ The inner HTML of your templates will be converted to support angular2 style syn
 
 * *ng-for
 * [hidden]
-* [ng-model]
+* [(ng-model)]
 * (click)
 * (dbl-click)
 * (mousedown)

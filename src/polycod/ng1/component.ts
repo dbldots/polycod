@@ -195,7 +195,7 @@ module Polycod {
 
         html = html.replace(/((\*ng-for="#)([a-zA-Z0-9-_]+)( of )([a-zA-Z0-9-_]+))/g, 'ng-repeat="$3 in $5 track by $index');
         html = html.replace(/\[hidden\]/g, 'ng-hide');
-        html = html.replace(/\[ng-model\]/g, 'ng-model');
+        html = html.replace(/\[\(ng-model\)\]/g, 'ng-model');
         html = html.replace(/\(click\)/g, 'ng-click');
         html = html.replace(/\(dbl-click\)/g, 'ng-dbl-click');
         html = html.replace(/\(mousedown\)/g, 'ng-mousedown');

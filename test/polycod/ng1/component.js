@@ -38,7 +38,7 @@ Polycod.component({
 Polycod.component({
   selector: 'test5',
   module: 'myApp',
-  template: '<input (click)="onClick()" (keydown)="onKeydown()"></div>',
+  template: '<input (click)="onClick()" (keydown)="onKeydown()" [(ng-model)]="foo"></div>',
   class: function() {}
 });
 
@@ -153,6 +153,13 @@ describe('Testing directives', function() {
     var element = $compile("<test5></test5")(scope);
     $rootScope.$digest();
     expect(element.html()).toContain('ng-keydown')
+  });
+
+  it('replaces [(ng-model)] with ng-model', function() {
+    scope = $rootScope.$new();
+    var element = $compile("<test5></test5")(scope);
+    $rootScope.$digest();
+    expect(element.html()).toContain('ng-model=')
   });
 
   it('calls ngOnChanges when binding changed', function() {

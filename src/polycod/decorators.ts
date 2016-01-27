@@ -20,7 +20,7 @@ module Polycod {
     export function Component (annotations) {
       return function (target) {
         validateAnnotations(annotations, 'Component', [
-          'selector', 'events', 'template', 'templateUrl', 'providers', 'module', 'transclude', 'host'
+          'selector', 'events', 'template', 'templateUrl', 'providers', 'module', 'transclude', 'host', 'properties'
         ]);
         return addAnnotations(target, annotations);
       }

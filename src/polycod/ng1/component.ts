@@ -47,8 +47,9 @@ module Polycod {
       }
 
       private prelink(scope, element, attrs, ctrl) {
-        var self      = this;
-        var events    = {};
+        var self        = this;
+        var events      = {};
+        var properties  = [];
 
         // make $injector available
         ctrl.$injector = this.$injector;
@@ -79,7 +80,9 @@ module Polycod {
             var name     = key.replace(/^bind-/, '');
             name         = util.deAll(name);
             name         = util.camel2Underscore(name);
-            ctrl[name]   = undefined;
+
+            properties.push(name);
+            ctrl[name] = undefined;
 
             (function (_name, _value) {
               scope.$parent.$watch(_value, (v) => {
@@ -96,6 +99,21 @@ module Polycod {
           // copy static attributes on to controller
           else {
             ctrl[key] = value;
+          }
+        }
+
+        // throw change notification for properties listed in annotation
+        if (self.klass.annotations.properties) {
+          for (var index in self.klass.annotations.properties) {
+            var property = self.klass.annotations.properties[index];
+            // check if property has been set up already
+            if (properties.indexOf(property) === -1) {
+              (function (_name) {
+                scope.$watch(_name, (v) => {
+                  changeNotification(_name, v);
+                });
+              })(property);
+            }
           }
         }
 

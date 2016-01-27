@@ -96,6 +96,7 @@ var Polycod;
                 var _this = this;
                 var self = this;
                 var events = {};
+                var properties = [];
                 // make $injector available
                 ctrl.$injector = this.$injector;
                 // $run enforces a digest run
@@ -121,6 +122,7 @@ var Polycod;
                         var name = key.replace(/^bind-/, '');
                         name = Polycod.util.deAll(name);
                         name = Polycod.util.camel2Underscore(name);
+                        properties.push(name);
                         ctrl[name] = undefined;
                         (function (_name, _value) {
                             scope.$parent.$watch(_value, function (v) {
@@ -136,6 +138,20 @@ var Polycod;
                     }
                     else {
                         ctrl[key] = value;
+                    }
+                }
+                // throw change notification for properties listed in annotation
+                if (self.klass.annotations.properties) {
+                    for (var index in self.klass.annotations.properties) {
+                        var property = self.klass.annotations.properties[index];
+                        // check if property has been set up already
+                        if (properties.indexOf(property) === -1) {
+                            (function (_name) {
+                                scope.$watch(_name, function (v) {
+                                    changeNotification(_name, v);
+                                });
+                            })(property);
+                        }
                     }
                 }
                 // implements functions to emit events
@@ -270,7 +286,7 @@ var Polycod;
         function Component(annotations) {
             return function (target) {
                 validateAnnotations(annotations, 'Component', [
-                    'selector', 'events', 'template', 'templateUrl', 'providers', 'module', 'transclude', 'host'
+                    'selector', 'events', 'template', 'templateUrl', 'providers', 'module', 'transclude', 'host', 'properties'
                 ]);
                 return addAnnotations(target, annotations);
             };

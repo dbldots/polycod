@@ -51,6 +51,16 @@ Polycod.component({
   }
 });
 
+Polycod.component({
+  selector: 'test7',
+  module: 'myApp',
+  properties: ['organization'],
+  template: '<h1>HELLO</h1>',
+  class: function() {
+    this.ngOnChanges = function(changes) {}
+  }
+});
+
 describe('Polycod.Ng1.Component', function(){
   describe('#constructor', function() {
     it('moves providers to $inject', function(){
@@ -182,5 +192,32 @@ describe('Testing directives', function() {
     $rootScope.$digest();
 
     expect(controller.ngOnChanges).toHaveBeenCalledWith({ name: { currentValue: 'johanna'  } });
+  });
+
+  it('calls ngOnChanges when property changed', function() {
+    scope = $rootScope.$new();
+    var element     = $compile("<test7></test7")(scope);
+    var controller  = element.controller('test7');
+
+    spyOn(controller, 'ngOnChanges')
+    controller.organization = 'McJunkin';
+    $rootScope.$digest();
+
+    expect(controller.ngOnChanges).toHaveBeenCalledWith({ organization: { currentValue: 'McJunkin'  } });
+  });
+
+  it('calls ngOnChanges only once when defined both in markup and annotation', function() {
+    scope = $rootScope.$new();
+    var element     = $compile("<test7 [organization]='comp'></test7")(scope);
+    var controller  = element.controller('test7');
+
+    $rootScope.$digest();
+
+    spyOn(controller, 'ngOnChanges')
+    controller.organization = 'McJunkin';
+    $rootScope.$digest();
+
+    expect(controller.ngOnChanges).toHaveBeenCalledWith({ organization: { currentValue: 'McJunkin'  } });
+    expect(controller.ngOnChanges.calls.count()).toEqual(1);
   });
 });

@@ -206,6 +206,18 @@ This makes a local variable available as property in your component (on the comp
 <ts-cmp [name]="userName"></ts-cmp>
 ```
 
+Get value inside your component
+
+```typescript
+class TsCmp {
+  private ngAfterViewInit() {
+    this.$apply(() => {
+      console.log(this.name);
+    });
+  }
+}
+```
+
 ### Dependency Injection
 
 ```typescript

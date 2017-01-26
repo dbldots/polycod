@@ -30,9 +30,5 @@
     "angular-mocks": "^1.4.8",
     "browserify": "^12.0.1",
     "jquery": "^2.2.0"
-  },
-  "dependencies": {
-    "phantomjs": "^2.1.7",
-    "typescript": "^2.1.5"
   }
 }

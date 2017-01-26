@@ -2,8 +2,8 @@ language: node_js
 node_js:
   - "4.1"
 before_script:
-  - yarn global add testem
-  - yarn global add typescript
-  - yarn global add browserify
+  - npm install -g testem
+  - npm install -g typescript
+  - npm install -g browserify
   - mkdir test/tmp
 script: testem -l PhantomJS ci

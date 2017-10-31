@@ -1,5 +1,6 @@
 /// <reference path = "polycod/ng1/component.ts" />
 /// <reference path = "polycod/decorators.ts" />
+/// <reference path = "polycod/controller.ts" />
 
 module Polycod {
   var strategy = Ng1.Component;

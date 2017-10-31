@@ -59,7 +59,7 @@ var Polycod;
 (function (Polycod) {
     var Ng1;
     (function (Ng1) {
-        var Component = (function () {
+        var Component = /** @class */ (function () {
             function Component(klass) {
                 this.klass = klass;
                 if (klass.annotations.providers)
@@ -99,7 +99,8 @@ var Polycod;
                 var properties = [];
                 // make $injector available
                 ctrl.$injector = this.$injector;
-                // $run enforces a digest run
+                ctrl.$get = this.$injector.get;
+                // $apply enforces a digest run
                 ctrl.$apply = function (fn) {
                     _this.$injector.get('$timeout').call(_this, fn.bind(_this));
                 };
@@ -121,7 +122,7 @@ var Polycod;
                         var isTwoWay = Polycod.util.isNgTwoWayBinding(key);
                         var name = key.replace(/^bind-/, '');
                         name = Polycod.util.deAll(name);
-                        name = Polycod.util.camel2Underscore(name);
+                        name = Polycod.util.dash2Camel(name);
                         properties.push(name);
                         ctrl[name] = undefined;
                         (function (_name, _value) {
@@ -185,7 +186,12 @@ var Polycod;
                         (function (_key) {
                             Object.defineProperty(scope, _key, {
                                 get: function () {
-                                    return ctrl[_key];
+                                    if (typeof ctrl[_key] === "function") {
+                                        return ctrl[_key].bind(ctrl);
+                                    }
+                                    else {
+                                        return ctrl[_key];
+                                    }
                                 },
                                 set: function (v) {
                                     return ctrl[_key] = v;
@@ -260,7 +266,7 @@ var Polycod;
                 return html;
             };
             return Component;
-        })();
+        }());
         Ng1.Component = Component;
     })(Ng1 = Polycod.Ng1 || (Polycod.Ng1 = {}));
 })(Polycod || (Polycod = {}));
@@ -312,8 +318,18 @@ var Polycod;
         Decorators.Ng1 = Ng1;
     })(Decorators = Polycod.Decorators || (Polycod.Decorators = {}));
 })(Polycod || (Polycod = {}));
+var Polycod;
+(function (Polycod) {
+    var Controller = /** @class */ (function () {
+        function Controller() {
+        }
+        return Controller;
+    }());
+    Polycod.Controller = Controller;
+})(Polycod || (Polycod = {}));
 /// <reference path = "polycod/ng1/component.ts" />
 /// <reference path = "polycod/decorators.ts" />
+/// <reference path = "polycod/controller.ts" />
 var Polycod;
 (function (Polycod) {
     var strategy = Polycod.Ng1.Component;

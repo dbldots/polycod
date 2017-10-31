@@ -53,7 +53,9 @@ module Polycod {
 
         // make $injector available
         ctrl.$injector = this.$injector;
-        // $run enforces a digest run
+        ctrl.$get = this.$injector.get;
+
+        // $apply enforces a digest run
         ctrl.$apply = (fn) => {
           this.$injector.get('$timeout').call(this, fn.bind(this));
         }
@@ -79,7 +81,7 @@ module Polycod {
             var isTwoWay = util.isNgTwoWayBinding(key);
             var name     = key.replace(/^bind-/, '');
             name         = util.deAll(name);
-            name         = util.camel2Underscore(name);
+            name         = util.dash2Camel(name);
 
             properties.push(name);
             ctrl[name] = undefined;
@@ -149,7 +151,12 @@ module Polycod {
             (function (_key) {
               Object.defineProperty(scope, _key, {
                 get: () => {
-                  return ctrl[_key];
+                  if (typeof ctrl[_key] === "function") {
+                    return ctrl[_key].bind(ctrl)
+                  }
+                  else {
+                    return ctrl[_key];
+                  }
                 },
                 set: (v) => {
                   return ctrl[_key] = v;
@@ -181,7 +188,7 @@ module Polycod {
               var destination = element.find('content[select="'+ select +'"]');
               if (destination.length) {
                 destination.append(cloneEl);
-              } else { 
+              } else {
                 cloneEl.remove();
               }
             });

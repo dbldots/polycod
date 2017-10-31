@@ -36,6 +36,13 @@ declare module Polycod {
     }
 }
 declare module Polycod {
+    abstract class Controller {
+        $injector: any;
+        $apply: Function;
+        $get: Function;
+    }
+}
+declare module Polycod {
     function bootstrap(klass: any): Ng1.Component;
     function component(annotations: any): Ng1.Component;
 }

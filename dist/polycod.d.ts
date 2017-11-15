@@ -39,7 +39,7 @@ declare module Polycod {
     abstract class Controller {
         $injector: any;
         $apply: Function;
-        $get: Function;
+        $get: (string) => any;
     }
 }
 declare module Polycod {

@@ -60,6 +60,11 @@ module Polycod {
           this.$injector.get('$timeout').call(this, fn.bind(this));
         }
 
+        // support for throwing events
+        ctrl.$emit = (...args: any[]) => {
+          scope.$emit.call(scope, args)
+        }
+
         var changeNotification = (key, value) => {
           if (!ctrl.ngOnChanges) return;
 

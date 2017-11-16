@@ -104,6 +104,14 @@ var Polycod;
                 ctrl.$apply = function (fn) {
                     _this.$injector.get('$timeout').call(_this, fn.bind(_this));
                 };
+                // support for throwing events
+                ctrl.$emit = function () {
+                    var args = [];
+                    for (var _i = 0; _i < arguments.length; _i++) {
+                        args[_i] = arguments[_i];
+                    }
+                    scope.$emit.call(scope, args);
+                };
                 var changeNotification = function (key, value) {
                     if (!ctrl.ngOnChanges)
                         return;

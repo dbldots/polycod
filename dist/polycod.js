@@ -130,7 +130,8 @@ var Polycod;
                         var isTwoWay = Polycod.util.isNgTwoWayBinding(key);
                         var name = key.replace(/^bind-/, '');
                         name = Polycod.util.deAll(name);
-                        name = Polycod.util.dash2Camel(name);
+                        name = Polycod.util.camel2Underscore(name);
+                        //name         = util.dash2Camel(name); ??
                         properties.push(name);
                         ctrl[name] = undefined;
                         (function (_name, _value) {

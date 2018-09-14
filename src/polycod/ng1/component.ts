@@ -238,6 +238,7 @@ module Polycod {
         html = html.replace(/\(keyup\)/g, 'ng-keyup');
         html = html.replace(/\(keypress\)/g, 'ng-keypress');
         html = html.replace(/\(change\)/g, 'ng-change');
+        html = html.replace(/\(paste\)/g, 'ng-paste');
         return html;
       }
     }
